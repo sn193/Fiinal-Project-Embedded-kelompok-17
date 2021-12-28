@@ -1,9 +1,10 @@
 #include <Servo.h>
+#include "Arduino.h"
 
 #define trigPin 4
 #define echoPin 3
-#define soundbuzzer 2
-int sound = 500;
+#define pir 5
+#define buzzer 2
 
 Servo servo;
 
@@ -11,13 +12,16 @@ void setup() {
   Serial.begin (9600);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  pinMode(soundbuzzer, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(pir, INPUT);
   servo.attach(13);
-  servo.write(90);  // set servo
+  servo.write(180);  // set servo
 }
 
 void loop() {
   long durationindigit, distanceincm;
+  int motion=0;
+  
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
@@ -28,14 +32,20 @@ void loop() {
 
 if (distanceincm > 10 || distanceincm <= 0){
   Serial.println("Outside the permissible range of distances");
-  noTone(soundbuzzer);
   }
 else {
-  servo.read();
   Serial.print(distanceincm);
   Serial.println(" cm");
-  tone(soundbuzzer, sound);
+  servo.read();
   }
 
-delay(300);
+  motion = digitalRead(pir);   // read sensor value
+  if (motion == HIGH) {           // check if the sensor is HIGH
+    digitalWrite(buzzer, HIGH);   // turn BUZZER ON
+    Serial.println("Motion Detected!"); 
+  } else {
+    digitalWrite(buzzer, LOW);
+    Serial.println("Motion stopped!");
+  }
+  delay(500);
 }
