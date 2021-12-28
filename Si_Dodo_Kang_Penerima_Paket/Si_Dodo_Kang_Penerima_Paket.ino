@@ -1,7 +1,5 @@
 #include <Servo.h>
 #include "Arduino.h"
-#include "SoftwareSerial.h"
-#include "DFRobotDFPlayerMini.h"
 
 #define trigPin 4
 #define echoPin 3
@@ -9,18 +7,15 @@
 #define buzzer 2
 
 Servo servo;
-SoftwareSerial mySoftwareSerial(9, 8); //RX, TX
-DFRobotDFPlayerMini myDFPlayer;
 
 void setup() {
   Serial.begin (9600);
-  mySoftwareSerial.begin(9600);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(pir, INPUT);
   servo.attach(13);
-  servo.write(120);  // set servo
+  servo.write(180);  // set servo
 }
 
 void loop() {
