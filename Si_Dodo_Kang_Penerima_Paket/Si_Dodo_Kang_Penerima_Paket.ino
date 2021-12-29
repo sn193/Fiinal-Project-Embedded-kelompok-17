@@ -1,12 +1,13 @@
 #include <Servo.h>
-#include "Arduino.h"
-
+#include <Arduino.h>
 #define trigPin 4
 #define echoPin 3
 #define pir 5
 #define buzzer 2
-
 Servo servo;
+long distance, duration;
+bool motion=0;
+
 
 void setup() {
   Serial.begin (9600);
@@ -14,38 +15,92 @@ void setup() {
   pinMode(echoPin, INPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(pir, INPUT);
-  servo.attach(13);
-  servo.write(180);  // set servo
+  servo.attach(11);
+  
+}
+bool cekOrang(){
+  unsigned long time;
+  time = millis();
+  
+  //beritahu kang paket
+   motion = digitalRead(pir); 
+  if (motion == HIGH) {       
+    Serial.println("ADA YANG GERAK TUH!!");
+    digitalWrite(buzzer, HIGH); 
+  } else {
+    digitalWrite(buzzer, LOW);
+    Serial.println("KOSONG");
+    delay(500);
+  }
+  
+  //tunggu 5 detik
+  while(millis()<time+5000){
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    duration = pulseIn(echoPin, HIGH);
+    distance = (duration/2) * 0.034;
+    Serial.print("Jarak : ");
+    Serial.println(distance);
+    if(distance < 15){
+      Serial.println("KANG PAKET NYARI KOTAK TUH");
+      return true;
+    }
+    delay(500);
+  }
+  return false;
 }
 
 void loop() {
-  long durationindigit, distanceincm;
-  int motion=0;
+  Serial.println("...................................................");
+  //pir
+  if(digitalRead(pir)){
+    if(cekOrang()){
+      unsigned long time;
+      time = millis();
+      //tunggu kang paket masukin barang
+      
+      digitalWrite(buzzer, HIGH);
+      delay(100);
+      digitalWrite(buzzer, LOW);
+      delay(75);
+      digitalWrite(buzzer, HIGH);
+      delay(100);
+      digitalWrite(buzzer, LOW);
   
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  durationindigit = pulseIn(echoPin, HIGH);
-  distanceincm = (durationindigit/5) / 29.1;
+  
+      while(millis()<time+5000){
+        digitalWrite(trigPin, LOW);
+        delayMicroseconds(10);
+        digitalWrite(trigPin, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(trigPin, LOW);
+        duration = pulseIn(echoPin, HIGH);
+        distance = (duration/2) * 0.034;
+        Serial.print("Jarak : ");
+        Serial.println(distance);
+        if(distance <= 10){
+          servo.write(180);
+          Serial.println("SUDAH DEKAT!");
+          delay(500);
+        }
+        else if(distance >= 10 && distance < 50){
+          servo.write(0);
+          Serial.println("MASIH JAUH");
+          delay(500);
+        }
+        else{
+          break;
+          Serial.println("DIA PERGI, SEPERTINYA BUKAN KANG PAKET!");
+          delay(500);
+        }
+      }
+      servo.write(0);
+    }
+  }
 
-if (distanceincm > 10 || distanceincm <= 0){
-  Serial.println("Outside the permissible range of distances");
-  }
-else {
-  Serial.print(distanceincm);
-  Serial.println(" cm");
-  servo.read();
-  }
-
-  motion = digitalRead(pir);   // read sensor value
-  if (motion == HIGH) {           // check if the sensor is HIGH
-    digitalWrite(buzzer, HIGH);   // turn BUZZER ON
-    Serial.println("Motion Detected!"); 
-  } else {
-    digitalWrite(buzzer, LOW);
-    Serial.println("Motion stopped!");
-  }
+  //nunggu 1/2 detik
   delay(500);
 }
