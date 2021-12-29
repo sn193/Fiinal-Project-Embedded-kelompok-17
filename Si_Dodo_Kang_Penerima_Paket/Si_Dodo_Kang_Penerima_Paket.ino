@@ -23,7 +23,6 @@ void setup() {
   mySerial.begin(9600);
   mp3_set_serial (mySerial);
   mp3_set_volume(30);
-  mp3_play (1);
   delay (5);
   
 }
