@@ -1,5 +1,7 @@
 #include <Servo.h>
 #include <Arduino.h>
+#include <SoftwareSerial.h>
+#include <DFPlayer_Mini_Mp3.h>
 #define trigPin 4
 #define echoPin 3
 #define pir 5
@@ -8,6 +10,7 @@ Servo servo;
 long distance, duration;
 bool motion=0;
 
+SoftwareSerial mySerial(8,9);
 
 void setup() {
   Serial.begin (9600);
@@ -16,6 +19,12 @@ void setup() {
   pinMode(buzzer, OUTPUT);
   pinMode(pir, INPUT);
   servo.attach(11);
+
+  mySerial.begin(9600);
+  mp3_set_serial (mySerial);
+  mp3_set_volume(30);
+  mp3_play (1);
+  delay (5);
   
 }
 bool cekOrang(){
@@ -23,18 +32,18 @@ bool cekOrang(){
   time = millis();
   
   //beritahu kang paket
-   motion = digitalRead(pir); 
+  motion = digitalRead(pir); 
   if (motion == HIGH) {       
-    Serial.println("ADA YANG GERAK TUH!!");
-    digitalWrite(buzzer, HIGH); 
+    digitalWrite(buzzer, HIGH);
+    Serial.println("ADA YANG GERAK TUH!!"); 
   } else {
     digitalWrite(buzzer, LOW);
     Serial.println("KOSONG");
     delay(500);
   }
   
-  //tunggu 5 detik
-  while(millis()<time+5000){
+  //tunggu 10 detik
+  while(millis()<time+10000){
     digitalWrite(trigPin, LOW);
     delayMicroseconds(10);
     digitalWrite(trigPin, HIGH);
@@ -69,9 +78,8 @@ void loop() {
       digitalWrite(buzzer, HIGH);
       delay(100);
       digitalWrite(buzzer, LOW);
-  
-  
-      while(millis()<time+5000){
+   
+      while(millis()<time+10000){
         digitalWrite(trigPin, LOW);
         delayMicroseconds(10);
         digitalWrite(trigPin, HIGH);
@@ -84,6 +92,7 @@ void loop() {
         if(distance <= 10){
           servo.write(180);
           Serial.println("SUDAH DEKAT!");
+          mp3_play (1);
           delay(500);
         }
         else if(distance >= 10 && distance < 50){
