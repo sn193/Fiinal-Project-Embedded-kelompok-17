@@ -1,9 +1,9 @@
 # Fiinal-Project-Embedded-kelompok-17
     Disusun Oleh:
-Novry Andi Saputra 14116053
-Mizaldi Fathoni 14116074
-Stephanie Helen Parida Napitupulu 119140070
-Ellya Rosanti 119140082
+1. Novry Andi Saputra 14116053
+2. Mizaldi Fathoni 14116074
+3. Stephanie Helen Parida Napitupulu 119140070
+4. Ellya Rosanti 119140082
 
 Si Dodo Kang Penerima Paket merupakan sebuah kotak penerima paket otomatis dengan menggunakan Arduino, yang mana sistem kerjanya adalah ketika Sensor Pir mendeteksi adanya gerakan dari Manusia/Kurir, dan Sensor Ultrasonic mendeteksi adanya Manusia/Kurir dengan jarak yang telah ditentukan, maka Buzzer akan menyala. Setelah Buzzer menyala, maka servo akan berputar 180 derajat dengan artian kotak akan terbuka karena telah dihubungkan dengan servo, setelah itu DfPlayer akan mengeluarkan suara "Masukkan paket ke dalam kotak" dan akan mengalami delay beberapa detik, setelah paket diletakkan maka kotak akan tertutup kembali dengan servo berputar 180 derajat kembali.
 
