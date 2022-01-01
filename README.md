@@ -20,3 +20,5 @@ Alat dan bahan yang digunakan adalah:
 10. Kotak
 11. Kardus
 12. Servo
+
+Link Video Demo (YouTube) : https://youtu.be/8pksvfmqgVA
